@@ -1,0 +1,26 @@
+{
+  "name": "restaurants",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon  ./bin/www"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "express-sanitizer": "^1.0.4",
+    "handlebars-paginate": "^0.1.0",
+    "hbs": "~4.0.1",
+    "http-errors": "~1.6.2",
+    "mongoose": "^5.1.3",
+    "morgan": "~1.9.0",
+    "pdf2json": "^1.1.7",
+    "pdftohtmljs": "^0.5.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  }
+}

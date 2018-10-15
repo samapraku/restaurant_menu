@@ -1,0 +1,248 @@
+
+<div class="row">
+  <div id="search-box" class="col l4 offset-l3 s12  input-field">
+ <input type="text" v-model="search_mdl" placeholder="Search Dishes, Ingredients, and Categories"/>
+  <button v-on:click="exec_search"  class="waves-effect waves-light btn">
+   Search
+ </button>
+
+</div>
+ <div id="preloader" :class="{progress: loading}">
+      <div class="indeterminate"></div>
+  </div>
+</div>
+<div class="row">
+  <div id="restau-list" class="col l3 s12">
+    <ul   class="collection  with-header">
+       <li class="collection-header">Restaurants</li>
+      <li
+      v-for="rest in restaurants"
+      :restaurant="rest"
+      :key="rest._id">
+        <label>
+        <input type="checkbox" class="filled-in" checked="checked" v-model="checkedNames"  :id="rest.name" :value="rest._id"/> <!--  @change="onChange" -->
+        <span>\{{rest.name}}</span>
+      </label>
+   
+      </li>
+
+    </ul>
+  </div>
+  <div class="col l8">
+    <div  id="show-list" class="menu-list collapsible">
+   <ul class="collection collapsible">
+      <dish-item
+      v-for="dish in dishes"
+      :dish="dish"
+      :key="dish._id">
+    </dish-item>
+  
+</ul>
+</div>
+<div id="paginator" class="pagination">
+  <paginate
+    :page-count="totalPageCount"
+    :container-class="'pagination'"
+    :prev-text="'prev'"
+    :next-text="'next'"
+    :click-handler="clickCallback">
+  </paginate>
+</div>
+
+  </div>
+
+</div>
+
+{{#extend "scripts"}}
+
+<script>
+
+
+
+Vue.component('paginate', VuejsPaginate)
+
+let app = new Vue({
+  el: '#show-list',
+  data: {
+    dishes:[],
+    total: null,
+    currentPage:1
+  },
+  methods: {
+    
+  }
+})
+
+let restau = new Vue({
+  el: '#restau-list',
+  data: {
+    restaurants:[],
+    checkedNames:[]
+  },
+  mounted: function(){
+    loadRestaurants();
+  }, 
+  watch:{
+    checkedNames: function(val,oldVal){
+      loadListPost(1);
+    //  console.log('checked: '+val);
+    }
+  }
+
+})
+
+
+let preloader = new Vue({
+  el: '#preloader',
+  data:{
+    loading: true
+  }  
+})
+
+
+
+let pgnator = new Vue({
+  el: '#paginator',
+  data: {
+  totalPageCount:0
+  },
+  methods: {
+    clickCallback: function(pageNum) {
+      app.currentPage = pageNum;
+     loadListPost(pageNum);
+    }
+  }
+})
+
+let srch_box = new Vue({
+  el: '#search-box',
+  data:{
+    search_mdl:''
+  },
+  methods: {
+    exec_search: function(event){
+      loadListPost(1);
+      //  loadList(1);
+    }
+  }
+})
+
+Vue.filter('capitalizeFirst', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.toLowerCase().slice(1)
+})
+
+Vue.filter('capitalize', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return value.toUpperCase() 
+})
+
+Vue.component('dish-item', {
+  props: ['dish'],
+  template: `<li class="collection-item avatar">
+    <img :src="dish.restaurant.logo" alt="" class="circle">
+      
+      <span class="new badge" data-badge-caption="" :style="{'float': 'none !important','padding':'5px 6px','margin-left':'0px'}">
+        \{{dish.category  | capitalizeFirst}}</span><br>
+      <i class="material-icons small"> local_dining</i><span class="title dish">\{{dish.name}}</span>
+       <span class=" ingredients-header">Ingredients </span>
+    <p>
+        <span v-html="dish.ingredients" class="ingredients">  </span>
+      </p>
+      <div class="collapsible-header card-panel teal lighten-4">
+        Restaurant:&nbsp; <span class="restaurant-name"> \{{dish.restaurant.name | capitalizeFirst}}</span> &nbsp; <span class="tiny"> (click for details)</span> <br>
+        </div>
+      <div class="collapsible-body"> 
+      <span class="restaurant-info"><i class="material-icons">http</i><a :href="dish.restaurant.url" target="_blank">website</a> </span>
+       <span class="restaurant-info">  <i class="material-icons">phone</i>\{{dish.restaurant.phone}} </span>
+      <span class="restaurant-info">  <i class="material-icons">email</i>\{{dish.restaurant.email}} </span>
+<span class="restaurant-info">  <i class="material-icons">location_on</i>\{{dish.restaurant.address}} </span>
+
+      </div>
+ 
+    <a href="" class="secondary-content">\{{dish.price}}</a>
+    </li> 
+ `
+})
+
+
+
+
+function loadList(pg_num){
+  preloader.loading = true;
+
+  let q_params;
+  if (pg_num) q_params='p='+pg_num;
+  q_params +='&per_page=10';
+  if(restau.search_mdl != "") q_params +='&q='+restau.search_mdl ;
+
+  // console.log(q_params);
+
+ axios.get('http://localhost:3000/dishes?'+q_params)
+  .then(function (response) {
+    app.dishes =  response.data.dishes;
+    app.total = response.data.total;
+    pgnator.totalPageCount = Math.floor(response.data.total / 10);
+    preloader.loading = false;
+  });
+  
+}
+
+function loadListPost(page){
+  
+    preloader.loading = true;
+ let params={};
+
+  if(page) params.p = page;
+  params.per_page =10;
+  if(srch_box.search_mdl !== "") params.q = srch_box.search_mdl;
+  if(restau.checkedNames.length > 0) params.res_ids = restau.checkedNames;
+
+  // console.log(JSON.stringify(params));
+
+
+   axios.post('http://localhost:3000/dishes/', JSON.stringify(params)
+    ,
+          {
+            headers: {
+             'Content-Type': 'application/json'
+//            'Content-Type': 'multipart/form-data'
+       //     'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          }
+        )
+         .then(function (response) {
+    app.dishes =  response.data.dishes;
+    app.total = response.data.total;
+    pgnator.totalPageCount = Math.floor(response.data.total / 10);
+    preloader.loading = false;
+  });
+}
+
+ document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.collapsible');
+    var instances = M.Collapsible.init(elems, {accordion:false});
+  });
+
+  loadListPost();
+
+  //loadList();
+
+ // document.addEventListener('DOMContentLoaded', loadList);
+
+ function loadRestaurants(){
+
+ axios.get('http://localhost:3000/restaurants')
+  .then(function (response) {
+   // console.log(response.data);
+    restau.restaurants = response.data;
+  });
+ }
+
+
+</script>
+
+{{/extend}}
+

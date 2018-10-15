@@ -59,3 +59,5 @@ typings/
 
 # next.js build output
 .next
+config/atlas_connection_string.txt
+config/db.js

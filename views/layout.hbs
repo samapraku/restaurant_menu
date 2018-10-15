@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{title}}</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+     <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+     {{{block "stylesheets"}}}
+  </head>
+  <body>
+     <div class="container">
+        <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo">FoodLE</a>
+   
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="/">Home</a></li>
+          <!-- <li><a href="badges.html">Components</a></li>
+        <li><a href="collapsible.html">JavaScript</a></li>
+      -->
+      </ul>
+    </div>
+  </nav>
+
+        <!-- Page Content goes here --> 
+           {{{body}}}
+           
+        <footer class="page-footer">
+        
+            <div class="row">
+           
+            <div class="footer-copyright">
+            <div class="container">
+            © 2018 Foodle 
+           
+            </div>
+          </div>
+       
+           </div>
+        </footer>
+      </div>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+      <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+    
+  <!-- Vue.js-->
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<!--vue-js paginate use the latest release -->
+<script src="https://unpkg.com/vuejs-paginate@latest"></script>
+
+<script src="/javascripts/moment.js"></script>
+     {{{block "scripts"}}}
+ 
+  </body>
+</html>

@@ -1,0 +1,94 @@
+ <div id="preloader" :class="{progress: loading}">
+      <div class="indeterminate"></div>
+  </div>
+<div class="row">  
+  
+  <div id="restau-list" class="col l12 s12">
+    <ul   class="collection  with-header">
+       <li class="collection-header">Restaurants</li>
+      <li
+      v-for="rest in restaurants"
+      :restaurant="rest"
+      :key="rest._id">
+        <span>\{{rest.name}}</span> &nbsp; (created: \{{rest.created | formatDate}})
+      </li>
+
+    </ul>
+  </div>
+  <button id="generate" class="waves-effect waves-light btn">Generate Menu</button>
+</div>
+  
+
+
+
+
+{{#extend "scripts"}}
+<script type="text/javascript">
+
+
+let preloader = new Vue({
+  el: '#preloader',
+  data:{
+    loading: true
+  }  
+})
+
+
+
+Vue.filter('formatDate', function (value) {
+  var a = new Date(value);
+  return moment(a).format('LLL');
+})
+
+let restau = new Vue({
+  el: '#restau-list',
+  data: {
+    restaurants:[],
+    checkedNames:[]
+  },
+  mounted: function(){
+    loadRestaurants();
+  }, 
+  watch:{
+    checkedNames: function(val,oldVal){
+      loadListPost(1);
+    //  console.log('checked: '+val);
+    }
+  }
+
+})
+
+
+ function loadRestaurants(){
+preloader.loading = true;
+ axios.get('http://localhost:3000/restaurants')
+  .then(function (response) {
+   // console.log(response.data);
+    restau.restaurants = response.data;
+    preloader.loading = false;
+  });
+ }
+
+loadRestaurants();
+
+
+ let btn = document.getElementById('generate');
+btn.onclick = function(){
+preloader.loading = true;
+  
+
+  axios.get('http://localhost:3000/insert')
+  .then(function (response) {
+  //  console.log(response);
+const div = document.getElementById('respons');  
+//div.innerHTML= JSON.stringify(response.data);
+    M.toast({html: 'Reset completed'});
+    loadRestaurants();
+  });
+  
+};
+
+</script>
+{{/extend}}
+
+

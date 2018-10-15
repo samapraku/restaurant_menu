@@ -1,0 +1,63 @@
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.tiny{
+  font-size: 0.85rem;
+}
+
+.restaurant-name{
+  font-weight: bold;
+}
+
+.restaurant-info{
+display: block;
+line-height: 1.5;
+}
+span.badge{
+  background-color: #ee6e73 !important;
+  margin-bottom: 5px ;
+}
+
+.restaurant-info i,.collection-item i{
+  width: 2rem;
+  font-size: 1.6rem;
+  display: inline-block;
+  text-align: center;
+  margin-right: 1rem;
+}
+
+.ingredients-header{
+  display: flex;
+  color:#26a69a;
+  font-size: 1.2rem;
+  font-weight: bold;
+  line-height: 1.5;
+  padding: 1rem;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.dish{
+  font-size: 1.3rem !important;
+  font-weight: bold;
+}
+
+.ingredients {
+  word-break: break-word;
+    color: #555;
+    width: 70%;
+    display: block;
+    font-size: 14px;    
+    padding: 1.2rem;
+}
+.collection .collection-item.active {
+       background-color: white !important;
+       color: inherit !important; 
+}
+
+.collection .collection-item.active .secondary-content,.secondary-content{
+  color: #26a69a !important;
+  font-weight: bold;
+}
+
